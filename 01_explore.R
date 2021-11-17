@@ -8,6 +8,9 @@ r1 <- read.csv("df.csv")
 
 # it's really the question of which of the remaining 2 is faster?
 
+# reading each in 20 times
+nsim <- 20
+
 # read_csv
 time2 <- rep(NA, nsim)
 for (i in 1:nsim) {
