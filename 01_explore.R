@@ -8,7 +8,7 @@ r1 <- read.csv("df.csv")
 
 # it's really the question of which of the remaining 2 is faster?
 
-# reading each in 20 times
+# try reading in 20 times for each method
 nsim <- 20
 
 # read_csv
