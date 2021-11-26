@@ -50,6 +50,6 @@ file.info("df3.csv")[1] # 1.217186978 GB
 
 # file size
 
-# low: 0.5 GB
-# medium: 1 GB
-# high: 2 GB
+# low: ~0.5 GB
+# medium: ~1.25 GB
+# high: ~2 GB
