@@ -81,3 +81,14 @@ for(i in 1:nrep) {
   low_readr[i] <- Sys.time() - start
 }
 
+
+res_quang <- tibble(high_fread, high_import, high_readr,
+                    mid_fread, mid_import, mid_readr,
+                    low_fread, low_import, low_readr) %>% 
+  pivot_longer(everything(),
+               names_to = "method",
+               values_to = "time") %>% 
+  separate(method, into = c("size", "package")) %>% 
+  mutate(computer = "quang")
+
+write_csv(res_quang, "res_quang.csv")
