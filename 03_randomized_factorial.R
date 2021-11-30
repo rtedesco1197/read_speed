@@ -44,15 +44,15 @@ for(i in 1:length(randomize)) {
       # read_csv
       if (randomize[i] < 81) {
         start <- Sys.time()
-        r2 <- rio::import("df0.5.csv")
+        r2 <- readr::read_csv("df0.5.csv")
       }
       else if (randomize[i] < 101) {
         start <- Sys.time()
-        r2 <- rio::import("df1.2.csv")
+        r2 <- readr::read_csv("df1.2.csv")
       }
       else {
         start <- Sys.time()
-        r2 <- rio::import("df2.0.csv")
+        r2 <- data.table::fread("df2.0.csv")
       }
       times[randomize[i]] <- Sys.time() - start
     }
@@ -60,15 +60,15 @@ for(i in 1:length(randomize)) {
       # fread
       if (randomize[i] < 141) {
         start <- Sys.time()
-        r3 <- rio::import("df0.5.csv")
+        r3 <- data.table::fread("df0.5.csv")
       }
       else if (randomize[i] < 161) {
         start <- Sys.time()
-        r3 <- rio::import("df1.2.csv")
+        r3 <- data.table::fread("df1.2.csv")
       }
       else {
         start <- Sys.time()
-        r3 <- rio::import("df2.0.csv")
+        r3 <- data.table::fread("df2.0.csv")
       }
       times[randomize[i]] <- Sys.time() - start
     }
