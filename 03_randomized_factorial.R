@@ -52,7 +52,7 @@ for(i in 1:length(randomize)) {
       }
       else {
         start <- Sys.time()
-        r2 <- data.table::fread("df2.0.csv")
+        r2 <- readr::read_csv("df2.0.csv")
       }
       times[randomize[i]] <- Sys.time() - start
     }
