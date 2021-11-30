@@ -92,3 +92,7 @@ res_quang <- tibble(high_fread, high_import, high_readr,
   mutate(computer = "quang")
 
 write_csv(res_quang, "res_quang.csv")
+
+
+
+
