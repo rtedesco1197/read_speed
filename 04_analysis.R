@@ -14,3 +14,7 @@ res %>%
 mod <- lm(time ~ computer*size*package, data = res)
 mod %>% 
   anova()
+
+library(mosaic)
+
+favstats(time ~ package + computer + size, data = res)
