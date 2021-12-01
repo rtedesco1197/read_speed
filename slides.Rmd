@@ -9,8 +9,8 @@ output:
     keep_tex: yes
     df_print: kable
     highlight: tango
-# csl: apa.csl
-# bibliography: ref.bib
+csl: apa.csl
+bibliography: ref.bib
 # aspectratio: 169
 fontsize: 11pt
 header-includes:
@@ -45,9 +45,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 *   Background
 
-*   Data
-
-*   Design
+*   Design and Data
 
 *   ANOVA
 
@@ -57,16 +55,54 @@ knitr::opts_chunk$set(echo = TRUE,
 
 #   Background
 
-*   Statisticians struggle with reading in large dataset (Matthews twitch)
+*   Statisticians struggle with reading in large dataset [@gregcsv]
 
-*   `read.csv` is old
+*   `read.csv`, part of `base` `R` [@baser], is old and slow.
 
 *   Old dogs need to learn new tricks
 
-*   There are better and more efficient algorithms (see book)
+*   There are better and more efficient data I/O algorithms in `R` [@efficient]
 
-    *   `rio::import`
+    *   `rio::import` [@rio]
     
-    *   `readr::read_csv` (part of `tidyverse`)
+    *   `readr::read_csv` [@readr] - part of `tidyverse` [@tidyverse]
     
-    *   `data.table::fread`
+    *   `data.table::fread` [@datatable]
+    
+#   Objective
+
+Our goal is to design an experiment...
+
+#   Design
+
+*   $3^k$ factorial design [@montgomery]
+
+*   $n = 20$ replicates
+
+*   How were the data generated?
+
+#   ANOVA
+
+*   Insert table
+
+*   Post-hoc
+
+#   Additional Analysis
+
+*   don't know yet
+
+#   Discussion
+
+*   Take advantage of more efficient algorithms.
+
+#   Cheers.
+
+*   S/o out Drs. Perry and Matthews
+
+*   Greg's YouTube video: [youtu.be/E5KJkooW4RY](https://youtu.be/E5KJkooW4RY)
+
+*   GitHub: [github.com/qntkhvn/read_speed](https://github.com/qntkhvn/read_speed)
+
+*   Question?  
+
+# References {.allowframebreaks}
