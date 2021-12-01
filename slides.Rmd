@@ -97,8 +97,14 @@ Our goal is to design an experiment...
 
 #   Cheers.
 
-*   S/o out Drs. Perry and Matthews
+*   Acknowledgments
 
+    *   Lance Davis
+    
+    *   Mike Perry
+    
+    *   Greg Matthews
+    
 *   Greg's YouTube video: [youtu.be/E5KJkooW4RY](https://youtu.be/E5KJkooW4RY)
 
 *   GitHub: [github.com/qntkhvn/read_speed](https://github.com/qntkhvn/read_speed)
