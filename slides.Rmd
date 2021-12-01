@@ -1,0 +1,72 @@
+---
+title: Analysis of CSV File Reading in R
+date: STAT 407 Fall 2021
+output: 
+  beamer_presentation: 
+    theme: Boadilla
+    color: beaver
+    fonttheme: professionalfonts
+    keep_tex: yes
+    df_print: kable
+    highlight: tango
+# csl: apa.csl
+# bibliography: ref.bib
+# aspectratio: 169
+fontsize: 11pt
+header-includes:
+  - \usepackage{xcolor}
+  - \definecolor{luc}{RGB}{88, 41, 49}
+  - \setbeamercolor{itemize/enumerate body}{fg=luc}
+  - \setbeamercolor{title}{fg=luc}
+  - \setbeamercolor{frametitle}{fg=luc}
+  - \setbeamertemplate{itemize item}{\color{luc}$\blacktriangleright$}
+  - \setbeamertemplate{itemize subitem}{\color{luc}$\blacktriangleright$}
+  - \setbeamercolor{footnote}{fg=luc}
+  - \setbeamercolor{footnote mark}{fg=luc}
+  - \setbeamercolor{footlinecolor}{fg=black,bg=lightgray}
+  - \setbeamertemplate{navigation symbols}{}
+  - \author[Q. Nguyen \& R. Tedesco]{Quang Nguyen* and Robert Tedesco*}
+  - \institute[]{* Loyola University Chicago}
+  - \setbeamercovered{transparent}
+  - \setbeamercolor{block title}{fg=luc}
+  - \setbeamercolor{local structure}{fg=luc}
+  - \usepackage{bbding}
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      comment = "")
+```
+
+#   Outline
+
+*   Background
+
+*   Data
+
+*   Design
+
+*   ANOVA
+
+*   Additional Analysis
+
+*   Discussion
+
+#   Background
+
+*   Statisticians struggle with reading in large dataset (Matthews twitch)
+
+*   `read.csv` is old
+
+*   Old dogs need to learn new tricks
+
+*   There are better and more efficient algorithms (see book)
+
+    *   `rio::import`
+    
+    *   `readr::read_csv` (part of `tidyverse`)
+    
+    *   `data.table::fread`
