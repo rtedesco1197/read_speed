@@ -17,7 +17,7 @@ library(mosaic)
 
 favstats(time ~ package + computer + size, data = res)
 
-mod <- lm(time ~ computer*size*package, data = res)
+mod <- lm(sqrt(time) ~ computer*size*package, data = res)
 mod %>% 
   anova()
 
@@ -32,3 +32,8 @@ plot.design(res)
 interaction.plot(res$size,res$package,res$time)
 interaction.plot(res$size,res$computer,res$time)
 interaction.plot(res$package,res$computer,res$time)
+
+library(ggfortify)
+autoplot(mod, which = 1:2, label = FALSE)
+hist(mod$residuals)
+
