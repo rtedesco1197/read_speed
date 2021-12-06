@@ -53,3 +53,30 @@ file.info("df3.csv")[1] # 1.217186978 GB
 # low: ~0.5 GB
 # medium: ~1.25 GB
 # high: ~2 GB
+
+
+
+# more data
+
+library(tidyverse)
+
+
+# 77
+# 88
+# 120
+# 110
+# 133
+# 150
+# 169
+
+x <- matrix(nrow = 1000000, ncol = 169)
+set.seed(100)
+for(i in 1:ncol(x)) {
+  x[, i] <- rnorm(1000000)
+}
+
+df <- as_tibble(x)
+
+head(df)
+
+write_csv(df, "~/Documents/df10.csv")
