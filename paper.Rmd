@@ -12,7 +12,7 @@ abstract: "write some stuff"
 header-includes:
  \usepackage{setspace}
  \setlength{\parskip}{3mm}
- \doublespacing
+ \onehalfspacing
  \usepackage{float}
  \floatplacement{figure}{H}
  \usepackage[skip=4pt]{caption}
@@ -30,6 +30,27 @@ knitr::opts_chunk$set(message = FALSE,
                       fig.pos = "H")
 ```
 
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+library(patchwork)
+library(broom)
+library(car)
+library(rcompanion)
+```
+
+```{r}
+res <- bind_rows(read_csv("res_quang.csv"),
+                 read_csv("res_rob.csv"),
+                 read_csv("res_lance.csv")) %>% 
+  mutate(computer = str_replace(computer, "lance", "dell"),
+         computer = str_replace(computer, "rob", "lenovo"),
+         computer = str_replace(computer, "quang", "mac"),
+         
+         across(where(is_character), factor))
+```
+
+
 \newpage
 
 # Introduction
@@ -46,4 +67,304 @@ The third and final package for efficient file reading in `R` is `data.table` [@
 
 In this paper, we attempt to design a three-factor factorial experiment and perform analyses to compare the speed of the three CSV importing algorithms in `R` as mentioned in previous paragraphs. In particular, the independent variables we are interested in examining are 1) the `R` packages/functions; 2) the file size; and 3) the computer device. The paper is outlined as follows. We first describe our data generating process for our experiment and the methodologies used for analyses in Section 2. We then spend the next section, 3, on our analyses and results of this experiment. Lastly, in Section 4, we give a quick summary of our results as well as discuss possible future work related to this project.
 
-# References
+# Experiment
+
+# Analysis of Variance
+
+```{r}
+p1 <- res %>% 
+  group_by(size, package) %>% 
+  summarize(avg_time = mean(time)) %>% 
+  ungroup() %>% 
+  ggplot(aes(size, avg_time)) +
+  geom_line(size = 1, aes(group = package, color = package)) +
+  geom_point(size = 2.5, aes(color = package), shape = 15) +
+  theme(legend.position = "bottom")
+
+p2 <- res %>% 
+  group_by(size, computer) %>% 
+  summarize(avg_time = mean(time)) %>% 
+  ungroup() %>% 
+  ggplot(aes(size, avg_time)) +
+  geom_line(size = 1, aes(group = computer, color = computer)) +
+  geom_point(size = 2.5, aes(color = computer), shape = 15) +
+  theme(legend.position = "bottom")
+
+p3 <- res %>% 
+  group_by(package, computer) %>% 
+  summarize(avg_time = mean(time)) %>% 
+  ungroup() %>% 
+  ggplot(aes(package, avg_time)) +
+  geom_line(size = 1, aes(group = computer, color = computer)) +
+  geom_point(size = 2.5, aes(color = computer), shape = 15) +
+  theme(legend.position = "bottom")
+```
+
+```{r, fig.width=12, fig.height=4.5, fig.cap="Interaction plots"}
+p1 + p2 + p3
+```
+
+```{r}
+mod <- lm(time ~ computer * size * package, data = res)
+mod %>% 
+  anova() %>% 
+  tidy() %>% 
+  knitr::kable(caption = "ANOVA output")
+```
+
+```{r}
+pqq <- tibble(resid = resid(mod)) %>% 
+  ggplot(aes(sample = resid)) +
+  stat_qq() + 
+  stat_qq_line(linetype = "dashed")
+
+prvf <- tibble(resid = resid(mod),
+             fitted = fitted(mod)) %>% 
+  ggplot(aes(fitted, resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed")
+```
+
+```{r, fig.width=6, fig.height=3, fig.cap="Residuals plots"}
+pqq + prvf
+```
+
+
+```{r}
+mod %>% 
+  pluck("residuals") %>% 
+  shapiro.test() %>% 
+  tidy() %>% 
+  knitr::kable(caption = "Shapiro-Wilk test for normality")
+```
+
+```{r}
+leveneTest(time ~ computer * size * package, data = res) %>% 
+  tidy() %>% 
+  knitr::kable(caption = "Levene's Test for Homogeneity of Variance (center = median)")
+```
+
+Mention other transfomations, put in appendix
+
+Permutation
+
+```{r}
+perm.fact.test <- function(Y,
+                           X1,
+                           X2,
+                           X3 = NA,
+                           perm = 100,
+                           method = "a") {
+  if (all(is.na(X3))) {
+    init.model <- anova(lm(Y ~ X1 * X2))
+  }
+  if (all(!is.na(X3))) {
+    init.model <- anova(lm(Y ~ X1 * X2 * X3))
+  }
+  
+  r <- length((init.model)$"F value") - 1
+  F.init <- init.model$"F value"[1:r]
+  MS <- init.model$"Mean Sq"
+  
+  # (a)
+  if (method == "a") {
+    F.perm <- matrix(nrow = r, ncol = perm)
+    if (all(is.na(X3))) {
+      for (i in 1:perm) {
+        Y.new <- sample(Y, replace = FALSE)
+        F.perm[, i] <- anova(lm(Y.new ~ X1 * X2))$"F value"[1:r]
+      }
+    }
+    
+    if (all(!is.na(X3))) {
+      for (i in 1:perm) {
+        Y.new <- sample(Y, replace = FALSE)
+        F.perm[, i] <- anova(lm(Y.new ~ X1 * X2 * X3))$"F value"[1:r]
+      }
+    }
+  }
+  
+  
+  # (b)
+  if (method == "b") {
+    MS.perm <- matrix(nrow = r + 1, ncol = perm)
+    if (all(is.na(X3))) {
+      for (i in 1:perm) {
+        Y.new <- sample(Y, replace = FALSE)
+        MS.perm[, i] <- anova(lm(Y.new ~ X1 * X2))$"Mean Sq"
+      }
+    }
+    
+    if (all(!is.na(X3))) {
+      for (i in 1:perm) {
+        Y.new <- sample(Y, replace = FALSE)
+        MS.perm[, i] <- anova(lm(Y.new ~ X1 * X2 * X3))$"Mean Sq"
+      }
+    }
+    
+    F.perm <- matrix(nrow = r, ncol = perm)
+    for (i in 1:perm) {
+      F.perm[, i] <- MS.perm[, i][1:r] / MS.perm[, i][r + 1]
+    }
+  }
+  
+  p1 <- matrix(nrow = r, ncol = perm)
+  for (i in 1:r) {
+    p1[i, ] <- F.perm[i, ] >= F.init[i]
+  }
+  
+  p2 <- apply(p1, 1, function(x) {
+    length(x[x == TRUE])
+  })
+  
+  p.val <- (p2 + 1) / perm
+  p.val <- ifelse(p.val > 1, 1, p.val)
+  
+  if (all(is.na(X3))) {
+    Table <-
+      data.frame(
+        Initial.F = init.model$"F value",
+        Df = init.model$"Df",
+        row.names = c("X1", "X2", "X1:X2", "Residual"),
+        pval = c(p.val, NA)
+      )
+  }
+  if (all(!is.na(X3))) {
+    Table <-
+      tibble(
+        Term = c(
+          "X1",
+          "X2",
+          "X3",
+          "X1:X2",
+          "X1:X3",
+          "X2:X3",
+          "X1:X2:X3",
+          "Residual"
+        ),
+        InitialF = init.model$"F value",
+        DF = init.model$"Df",
+        pval = c(p.val, NA)
+      )
+  }
+  res <- list()
+  res$Table <- Table
+  res
+}
+
+set.seed(69)
+perm <- perm.fact.test(Y = res$time,
+                       X1 = res$size,
+                       X2 = res$computer,
+                       X3 = res$package,
+                       perm = 9999)
+
+perm$Table %>% 
+  mutate(Term = str_replace(Term, "X1", "size"),
+         Term = str_replace(Term, "X2", "computer"),
+         Term = str_replace(Term, "X3", "package")) %>% 
+  knitr::kable(caption = "Permutation test")
+```
+
+```{r}
+pairwisePermutationTest(time ~ size, data = res, method = "fdr") %>% 
+  as_tibble()
+pairwisePermutationTest(time ~ package, data = res, method = "fdr") %>% 
+  as_tibble()
+pairwisePermutationTest(time ~ computer, data = res, method = "fdr") %>% 
+  as_tibble()
+```
+
+
+
+# Additional Analysis
+
+# References {-}
+
+<div id="refs"></div>
+
+\newpage
+
+# Appendix {-}
+
+log transfomation
+
+```{r}
+mod <- lm(log(time) ~ computer * size * package, data = res)
+mod %>% 
+  anova() %>% 
+  tidy() %>% 
+  knitr::kable(caption = "ANOVA output")
+```
+
+```{r}
+pqq <- tibble(resid = resid(mod)) %>% 
+  ggplot(aes(sample = resid)) +
+  stat_qq() + 
+  stat_qq_line(linetype = "dashed")
+
+prvf <- tibble(resid = resid(mod),
+             fitted = fitted(mod)) %>% 
+  ggplot(aes(fitted, resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed")
+```
+
+```{r, fig.width=6, fig.height=3, fig.cap="Residuals plots"}
+pqq + prvf
+```
+
+```{r}
+mod %>% 
+  pluck("residuals") %>% 
+  shapiro.test() %>% 
+  tidy() %>% 
+  knitr::kable(caption = "Shapiro-Wilk test for normality")
+```
+
+```{r}
+leveneTest(log(time) ~ computer * size * package, data = res) %>% 
+  tidy() %>% 
+  knitr::kable(caption = "Levene's Test for Homogeneity of Variance (center = median)")
+```
+
+Box-Cox Transformation
+
+```{r}
+mod <- lm(time^(-0.2543644) ~ computer * size * package, data = res)
+mod %>% 
+  anova() %>% 
+  tidy() %>% 
+  knitr::kable(caption = "ANOVA output")
+```
+
+```{r}
+pqq <- tibble(resid = resid(mod)) %>% 
+  ggplot(aes(sample = resid)) +
+  stat_qq() + 
+  stat_qq_line(linetype = "dashed")
+
+prvf <- tibble(resid = resid(mod),
+             fitted = fitted(mod)) %>% 
+  ggplot(aes(fitted, resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed")
+```
+
+```{r, fig.width=6, fig.height=3, fig.cap="Residuals plots"}
+pqq + prvf
+```
+
+```{r}
+mod %>% 
+  pluck("residuals") %>% 
+  shapiro.test() %>% 
+  tidy() %>% 
+  knitr::kable(caption = "Shapiro-Wilk test for normality")
+```
+
+```{r}
+leveneTest(time^(-0.2543644) ~ computer * size * package, data = res) %>% 
+  tidy() %>% 
+  knitr::kable(caption = "Levene's Test for Homogeneity of Variance (center = median)")
+```

@@ -43,12 +43,12 @@ autoplot(mod2, which = 1:2, label = FALSE)
 # boxcox
 hist(mod3$residuals)
 
-bc <- MASS::boxcox(time ~ computer*size*package, data = res)
-bc$x[which.max(bc$y)]
+# bc <- MASS::boxcox(time ~ computer*size*package, data = res)
+# bc$x[which.max(bc$y)]
 
 car::powerTransform(res$time, family = "bcPower")
 
-mod3 <- lm(time^(-0.4242424)  ~ computer*size*package, data = res)
+mod3 <- lm(time^(-0.2543644)  ~ computer*size*package, data = res)
 mod3 %>% 
   anova()
 
