@@ -21,11 +21,6 @@ mod <- lm(time ~ computer*size*package, data = res)
 mod %>% 
   anova()
 
-# interaction plot
-# library(sjPlot)
-# plot_model(mod, type = "int")
-
-
 plot.design(res)
 interaction.plot(res$size,res$package,res$time)
 interaction.plot(res$size,res$computer,res$time)
@@ -34,6 +29,34 @@ interaction.plot(res$package,res$computer,res$time)
 library(ggfortify)
 autoplot(mod, which = 1:2, label = FALSE)
 hist(mod$residuals)
+
+
+# log transform
+
+mod2 <- lm(log(time) ~ computer*size*package, data = res)
+mod2 %>% 
+  anova()
+
+autoplot(mod2, which = 1:2, label = FALSE)
+
+# power transformation
+# boxcox
+hist(mod3$residuals)
+
+bc <- MASS::boxcox(time ~ computer*size*package, data = res)
+bc$x[which.max(bc$y)]
+
+car::powerTransform(res$time, family = "bcPower")
+
+mod3 <- lm(time^(-0.4242424)  ~ computer*size*package, data = res)
+mod3 %>% 
+  anova()
+
+autoplot(mod3, which = 1:2, label = FALSE)
+
+# interaction plot
+# library(sjPlot)
+# plot_model(mod, type = "int")
 
 
 library(asbio)
