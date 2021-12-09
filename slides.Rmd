@@ -19,14 +19,14 @@ header-includes:
   - \setbeamercolor{itemize/enumerate body}{fg=luc}
   - \setbeamercolor{title}{fg=luc}
   - \setbeamercolor{frametitle}{fg=luc}
-  - \setbeamertemplate{itemize item}{\color{luc}$\blacktriangleright$}
-  - \setbeamertemplate{itemize subitem}{\color{luc}$\blacktriangleright$}
+  - \setbeamertemplate{itemize item}{\color{luc}$\bullet$}
+  - \setbeamertemplate{itemize subitem}{\color{luc}$\bullet$}
   - \setbeamercolor{footnote}{fg=luc}
   - \setbeamercolor{footnote mark}{fg=luc}
   - \setbeamercolor{footlinecolor}{fg=black,bg=lightgray}
   - \setbeamertemplate{navigation symbols}{}
   - \author[Q. Nguyen \& R. Tedesco]{Quang Nguyen* and Robert Tedesco*}
-  - \institute[]{* Loyola University Chicago}
+  - \institute[]{* \hspace{-1.5mm} Loyola University Chicago}
   - \setbeamercovered{transparent}
   - \setbeamercolor{block title}{fg=luc}
   - \setbeamercolor{local structure}{fg=luc}
@@ -77,7 +77,7 @@ res <- bind_rows(read_csv("res_quang.csv"),
 
 *   Statisticians struggle with reading in large dataset [@gregcsv]
 
-*   `read.csv`, part of `base` `R` [@baser], is old and slow.
+*   `read.csv()`, part of `base` `R` [@baser], is old and slow.
 
 *   There are better and more efficient data I/O algorithms in `R` [@efficient]
 
@@ -96,12 +96,22 @@ res <- bind_rows(read_csv("res_quang.csv"),
     *   Computer: Lenovo, Dell, MacBook
     
     *   Function: `rio::import()`, `readr::read_csv()`, `data.table::fread()`
-
-*   Model: insert formula
-
+    
 *   $n = 20$ replicates
 
-*   How were the data generated?
+*   $y_{ijkl} = \mu + \alpha_i + \beta_j + \gamma_k + (\alpha \beta)_{ij} + (\alpha \gamma)_{ik} + (\beta \gamma)_{jk} + (\alpha \beta \gamma)_{ijk} + \epsilon_{ijkl}$
+
+    *   $i, j , k = 1, 2, 3$
+    
+    *   $l = 1, 2, ...,20$
+
+<!-- 
+mu: overall mean 
+alpha i beta j gamma k main effects of 3 factors A B C
+3 two-factor and 1 three-factor interaction effects 
+-->
+
+#   Data
 
 #   Data Understanding
 
@@ -445,6 +455,24 @@ glht(anc, linfct = mcp(meth = "Tukey")) %>%
 
 *   `readr` significantly differs from the other 2 methods when using Mac.
 
+#   Discussion
+
+*   Take advantage of more efficient algorithms!!!
+
+*   Extend to other forms of data (images, audio)
+
+*   Other variables to consider
+
+    *   On battery vs charging
+    
+    *   Amount of RAM stored in the `R` environment
+    
+    *   Different environments: RStudio Desktop, RStudio Cloud, Colab Notebook, Terminal/Command Line...
+    
+    *   Reading files in locally vs from a DropBox/Google Drive link
+
+    *   `R` (`readr::read_csv()`) vs `python` (`pandas.read_csv()`)
+
 #   Cheers.
 
 *   Acknowledgments
@@ -454,8 +482,6 @@ glht(anc, linfct = mcp(meth = "Tukey")) %>%
     *   Mike Perry
     
     *   Greg Matthews
-    
-*   Take advantage of more efficient algorithms!!!
     
 *   Greg's YouTube video: [youtu.be/E5KJkooW4RY](https://youtu.be/E5KJkooW4RY)
 
