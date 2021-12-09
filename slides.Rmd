@@ -159,7 +159,7 @@ p1 + p2 + p3
 *   All model terms are significant...
 
 ```{r}
-mod <- lm(time ~ computer * size * package, data = res)
+mod <- lm(time ~  size * computer * package, data = res)
 df <- mod %>% 
   anova() %>% 
   tidy() %>% 
@@ -397,6 +397,33 @@ res %>%
 
 #   Additional Analysis
 
+*   Clearly there's a difference in algorithm reading time when using Mac
+
+```{r}
+dat <- read_csv("add.csv") %>% 
+  mutate(meth = factor(meth))
+```
+
+```{r, fig.height=2.9, fig.width=4, fig.align='center'}
+dat %>% 
+  ggplot(aes(size, elapsed, color = meth)) +
+  geom_point() +
+  geom_smooth(method = "lm", 
+              size = 0.5,
+              alpha = 0.3) +
+  labs(x = "Size (GB)",
+       y = "Time Elapsed (sec)",
+       color = "Method") +
+  scale_color_manual(values = c("midnightblue", "darkgreen", "darkorange2")) +
+  theme(axis.title = element_text(size = 9),
+        legend.text = element_text(size = 8),
+        axis.text = element_text(size = 8),
+        legend.title = element_text(size = 9))
+```
+
+
+#   Additional Analysis
+
 *   ANCOVA
 
     *   Response: time elapsed (in seconds)
@@ -405,10 +432,7 @@ res %>%
     
     *   Covariate: file size (in GB)
 
-```{r}
-dat <- read_csv("add.csv") %>% 
-  mutate(meth = factor(meth))
-```
+
 
 ```{r}
 anc <- aov(elapsed ~ meth + size, data = dat)
@@ -459,7 +483,7 @@ glht(anc, linfct = mcp(meth = "Tukey")) %>%
 
 *   Take advantage of more efficient algorithms!!!
 
-*   Extend to other forms of data (images, audio)
+*   Extend to other file formats (`.tsv`, `.json`...) and other forms of data (images, audio, ...)
 
 *   Other variables to consider
 
