@@ -86,3 +86,4 @@ phoc <- glht(anc, linfct = mcp(meth = "Tukey"))
 
 phoc %>% 
   tidy()
+
