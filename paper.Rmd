@@ -36,7 +36,8 @@ Abstract
 
 \small
 
-> In this report, we do blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah
+> This manuscript is a statistical investigation into the impact of different factors on the time elapsed when importing CSV files into the \texttt{R} statistical computing language. We designed a $3^3$ factorial experiment with 20 replicates where our 
+variables of interest were computer model, CSV file size, and `R` package/function. Our main findings are: 1) the `rio` package resulted in significantly different mean CSV reading times compared to the packages `readr` and `data.table`; 2) The Lenovo device had significantly lower mean reading times compared to the MacBook and Dell laptops; and 3) the average importing time differ for the three CSV files of sizes 0.49 GB, 1.22 GB, and 1.96 that we considered. Furthermore, a follow-up ANCOVA showed that `readr` is the most efficient package for loading CSV files into R on a MacBook.
 
 \normalsize
 
@@ -523,3 +524,9 @@ shap %>%
          p.value = "0.000") %>% 
   knitr::kable(caption = "Shapiro-Wilk and Levene tests for the three-factor factorial ANOVA model with a Box-Cox transformation to the response.")
 ```
+
+\newpage
+
+#   Individual Contributions {-}
+
+Together we decided the topic, data collection process, wrote code for analyses (EDA, model fits, tests) and wrote the report. Rob wrote the abstract, experiment, analysis, and discussion sections of the report. Quang edited those sections, wrote the additional analysis section, and created tables and figures for the report. 
