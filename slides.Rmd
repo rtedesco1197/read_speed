@@ -6,7 +6,7 @@ output:
     theme: Boadilla
     color: beaver
     fonttheme: professionalfonts
-    keep_tex: no
+    keep_tex: true
     df_print: kable
     highlight: tango
 csl: apa.csl

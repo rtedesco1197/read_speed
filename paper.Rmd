@@ -8,6 +8,7 @@ output:
   pdf_document: 
     number_sections: true
     df_print: kable
+    keep_tex: true
 # abstract: "write some stuff"
 header-includes:
  \usepackage{setspace}
