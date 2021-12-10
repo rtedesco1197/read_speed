@@ -1,5 +1,5 @@
 ---
-title: Analysis of CSV File Reading in R
+title: \textbf{Analysis of CSV File Reading in R}
 date: STAT 407 Fall 2021
 output: 
   beamer_presentation: 
@@ -24,6 +24,8 @@ header-includes:
   - \setbeamercolor{footnote}{fg=luc}
   - \setbeamercolor{footnote mark}{fg=luc}
   - \setbeamercolor{footlinecolor}{fg=black,bg=lightgray}
+  - \setbeamercolor{structure}{fg=luc}
+  - \setbeamercolor{titlelike}{parent=structure}
   - \setbeamertemplate{navigation symbols}{}
   - \author[Q. Nguyen \& R. Tedesco]{Quang Nguyen* and Robert Tedesco*}
   - \institute[]{* \hspace{-1.5mm} Loyola University Chicago}
@@ -112,6 +114,14 @@ alpha i beta j gamma k main effects of 3 factors A B C
 -->
 
 #   Data
+
+*   Generate 3 files of different sizes consisting of columns of randomly-draw samples from $N(0,1)$, then export to CSV.
+
+*   $3^3$ possible combinations of `R` package, file size, and computer. 
+
+*   Use the 3 reading functions to load the CSV files, then `Sys.time()` to measure time elapsed.
+
+*   Obtain 20 replicates for each combination according to the order of a random sample of 1 through $3^3$.  
 
 #   Data Understanding
 
